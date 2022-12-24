@@ -7,6 +7,7 @@ module.exports = {
   },
   daisyui: {
     themes: [
+      'dark',
       {
         halloween: {
           ...require('daisyui/src/colors/themes')['[data-theme=halloween]'],
