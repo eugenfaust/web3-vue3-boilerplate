@@ -16,7 +16,7 @@ const routes = [
     props: true,
   },
 ];
-const base = process.env.NODE_ENV === 'production' ? '/vue_nft_sample/' : '/';
+const base = process.env.NODE_ENV === 'production' ? '/web3-vue3-boilerplate/' : '/';
 const router = createRouter({
   history: createWebHistory(base),
   routes,

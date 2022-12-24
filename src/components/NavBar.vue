@@ -4,8 +4,18 @@ import ConnectButton from './ConnectButton.vue';
 
 export default {
   name: 'NavBar',
+  mounted() {
+    window.addEventListener('scroll', this.scrollNavbar);
+    this.prevScrollPos = window.scrollY;
+  },
+  unmounted() {
+    window.removeEventListener('scroll', this.scrollNavbar);
+  },
   data() {
-    return {};
+    return {
+      isScrolling: false,
+      prevScrollPos: 0,
+    };
   },
   setup() {
     const toast = useToast();
@@ -26,13 +36,23 @@ export default {
     showDrawer() {
       this.$store.commit('setDrawer', !this.$store.state.showDrawer);
     },
+    scrollNavbar() {
+      const curScrollPos = window.scrollY;
+      if (curScrollPos < 50) return;
+      if (this.prevScrollPos < curScrollPos) {
+        this.isScrolling = true;
+      } else {
+        this.isScrolling = false;
+      }
+      this.prevScrollPos = curScrollPos;
+    },
   },
   components: { ConnectButton },
 };
 </script>
 
 <template>
-  <div class="navbar bg-primary">
+  <div class="navbar bg-primary fixed top-0 duration-300 z-20" :class="{'-translate-y-16': isScrolling}">
     <div class="flex-1 ml-2 cursor-pointer">
       <svg
         v-if="!currentRoute.includes('/wallet/') || screenWidth > 1024"

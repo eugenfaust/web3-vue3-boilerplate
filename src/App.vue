@@ -20,8 +20,8 @@ export default {
 
 <template>
   <NavbarVue />
-  <div class="flex justify-center items-center">
-    <router-view/>
+  <div class="flex justify-center items-center pt-16">
+    <router-view />
   </div>
-  <FooterVue/>
+  <FooterVue />
 </template>

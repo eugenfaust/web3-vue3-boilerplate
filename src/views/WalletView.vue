@@ -35,12 +35,12 @@ export default {
       class="drawer-toggle"
       :checked="showDrawer"
     />
-    <div class="drawer-content flex flex-col items-center mt-5">
+    <div class="drawer-content flex flex-col items-center">
       <DashboardVue v-if="currentView === 'dashboard'" />
       <SettingsView v-else-if="currentView === 'settings'" />
       <InvestView v-else />
     </div>
-    <div class="drawer-side border-r-2 border-primary">
+    <div class="drawer-side border-r-2 border-primary ">
       <label for="my-drawer-2" class="drawer-overlay"></label>
       <ul class="menu p-4 w-80 bg-base-100 text-base-content">
         <li>
