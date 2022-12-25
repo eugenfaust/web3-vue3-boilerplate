@@ -89,6 +89,6 @@ export default {
         >Web3App</a
       >
     </div>
-    <ConnectButton account="0x0E6B8B9C096d4cE277dE7842897EBc212BA8726D" />
+    <ConnectButton />
   </div>
 </template>

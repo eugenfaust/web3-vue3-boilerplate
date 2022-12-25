@@ -2,6 +2,7 @@
 import { useToast } from 'vue-toastification';
 import NavbarVue from './components/NavBar.vue';
 import FooterVue from './components/Footer.vue';
+import Web3 from './services/Web3';
 
 export default {
   data() {},
@@ -15,6 +16,12 @@ export default {
     },
   },
   components: { NavbarVue, FooterVue },
+  async mounted() {
+    const wallet = await Web3.getWallet();
+    if (wallet) {
+      this.$store.commit('setAddress', wallet);
+    }
+  },
 };
 </script>
 

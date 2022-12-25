@@ -20,6 +20,16 @@ export default {
     currentView() {
       return this.$route.path.split('/')[2];
     },
+    address() {
+      return this.$store.state.address;
+    },
+  },
+  watch: {
+    address(newVal) {
+      if (!newVal) {
+        this.goTo('/');
+      }
+    },
   },
   mounted() {
     this.$store.commit('setDrawer', false);

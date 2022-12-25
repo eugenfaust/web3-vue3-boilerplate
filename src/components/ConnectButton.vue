@@ -1,5 +1,6 @@
 <script>
 import ClickOutSide from '../directives/ClickOutSide';
+import ConnectModalVue from './ConnectModal.vue';
 
 export default {
   data() {
@@ -7,23 +8,38 @@ export default {
       openMenu: false,
     };
   },
-  props: {
-    account: String,
-  },
+  props: {},
   methods: {
     closeMenu() {
       if (this.openMenu) {
         this.openMenu = false;
       }
     },
+    openConnectModal() {
+      this.$store.commit('setConnectModal', true);
+    },
+    disconnectWallet() {
+      this.$store.commit('setAddress', undefined);
+      this.closeMenu();
+    },
   },
   directives: {
     ClickOutSide,
   },
+  computed: {
+    address() {
+      return this.$store.state.address;
+    },
+  },
+  mounted() {},
+  components: { ConnectModalVue },
 };
 </script>
 <template>
-  <div v-if="!account" class="btn">Connect wallet</div>
+  <ConnectModalVue />
+  <div v-if="!address" class="btn" @click="openConnectModal">
+    Connect wallet
+  </div>
   <div v-else>
     <div class="dropdown dropdown-end" :class="{ 'dropdown-open': openMenu }">
       <label
@@ -41,13 +57,14 @@ export default {
           />
         </svg>
         <span class="mt-1 ml-2 mr-2 select-none"
-          >{{ account.substring(0, 2) }}...{{
-            account.substring(account.length - 4, account.length)
+          >{{ address.substring(0, 2) }}...{{
+            address.substring(address.length - 4, address.length)
           }}</span
         >
       </label>
       <ul
-        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52" :class="{'hidden': !openMenu}"
+        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+        :class="{ hidden: !openMenu }"
       >
         <router-link to="/wallet/invest">
           <li>
@@ -57,7 +74,7 @@ export default {
             </p>
           </li>
         </router-link>
-        <li><p>Disconnect wallet</p></li>
+        <li @click="disconnectWallet"><p>Disconnect wallet</p></li>
       </ul>
     </div>
   </div>
