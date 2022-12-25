@@ -1,14 +1,14 @@
 /* eslint-disable no-undef */
 import Web3 from 'web3/dist/web3.min';
-
 // import WalletConnectProvider from '@walletconnect/web3-provider';
 // Fix for ReferenceError: global is not defined
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 
 export default class Web3Service {
-  static infuraId = '40fe43b53a3f466fb03eb960975514e3';
+  static infuraId = import.meta.env.VITE_INFURA_KEY;
 
   static async walletConnect() {
+    console.log(this.infuraId);
     //  Create WalletConnect Provider
     const provider = new WalletConnectProvider({
       infuraId: this.infuraId,
