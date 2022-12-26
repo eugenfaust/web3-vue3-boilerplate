@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import WalletView from '../views/WalletView.vue';
+import NFTView from '../views/NFTView.vue';
 
 const routes = [
   {
@@ -13,6 +14,12 @@ const routes = [
     path: '/wallet/:data',
     name: 'Wallet',
     component: WalletView,
+    props: true,
+  },
+  {
+    path: '/nft',
+    name: 'NFT',
+    component: NFTView,
     props: true,
   },
 ];

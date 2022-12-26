@@ -74,6 +74,13 @@ export default {
             </p>
           </li>
         </router-link>
+        <router-link to="/nft">
+          <li>
+            <p class="justify-between">
+              Buy NFT
+            </p>
+          </li>
+        </router-link>
         <li @click="disconnectWallet"><p>Disconnect wallet</p></li>
       </ul>
     </div>

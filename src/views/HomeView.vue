@@ -4,9 +4,6 @@ export default {
     return {};
   },
   methods: {
-    test() {
-      this.$store.commit('setAddress', '0xasdasdasdasdasdasdasd');
-    },
   },
 };
 </script>
