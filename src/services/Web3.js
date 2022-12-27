@@ -3,9 +3,26 @@ import Web3 from 'web3/dist/web3.min';
 // import WalletConnectProvider from '@walletconnect/web3-provider';
 // Fix for ReferenceError: global is not defined
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
+import FlyNFT from '../abi/FlyNFT.json';
 
 export default class Web3Service {
   static infuraId = import.meta.env.VITE_INFURA_KEY;
+
+  static nftContract = import.meta.env.VITE_NFT_CONTRACT;
+
+  static abi = FlyNFT.abi;
+
+  static async buyNFT(account) {
+    let nftContract = this.getProvider().eth;
+    nftContract = new nftContract.Contract(this.abi, this.nftContract);
+    return nftContract.methods.mint().send({ from: account });
+  }
+
+  static async getURI(tokenID) {
+    let nftContract = this.getProvider().eth;
+    nftContract = new nftContract.Contract(this.abi, this.nftContract);
+    return nftContract.methods.tokenURI(tokenID).call();
+  }
 
   static async walletConnect() {
     console.log(this.infuraId);

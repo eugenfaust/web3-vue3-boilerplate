@@ -1,60 +1,87 @@
 <script>
 import 'swiper/swiper.min.css';
 import 'swiper/swiper-bundle.min.css';
+import { useToast } from 'vue-toastification';
 import gsap from 'gsap';
 // eslint-disable-next-line import/no-unresolved
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import Web3 from '../services/Web3';
+/*
 import Cat1 from '../assets/nft/cat1.jpg';
 import Cat2 from '../assets/nft/cat2.jpg';
 import Cat3 from '../assets/nft/cat3.jpg';
-import Cat4 from '../assets/nft/cat4.jpg';
+import Cat4 from '../assets/nft/cat4.jpg'; */
 
 export default {
-  setup() {},
+  setup() {
+    const toast = useToast();
+    return { toast };
+  },
   data() {
     return {
       swiper: undefined,
-      Cat1,
-      Cat2,
-      Cat3,
-      Cat4,
       tweenedPrice: 10,
       price: 10,
+      tokenID: 1,
       currentCat: {
         id: 0,
         title: 'Anime Cat #1',
-        img: Cat1,
+        img: 'https://www.linkpicture.com/q/cat1.jpg',
         price: 10,
       },
       cats: [
         {
           id: 0,
           title: 'Anime Cat #1',
-          img: Cat1,
+          img: 'https://www.linkpicture.com/q/cat1.jpg',
           price: 10,
         },
         {
           id: 1,
           title: 'Anime Cat #2',
-          img: Cat2,
+          img: 'https://www.linkpicture.com/q/cat2_1.jpg',
           price: 15,
         },
         {
           id: 2,
           title: 'Anime Cat #3',
-          img: Cat3,
+          img: 'https://www.linkpicture.com/q/cat3_1.jpg',
           price: 5,
         },
         {
           id: 3,
           title: 'Anime Cat #4',
-          img: Cat4,
+          img: 'https://www.linkpicture.com/q/cat4_1.jpg',
           price: 20,
         },
       ],
+      isBuying: false,
     };
   },
   methods: {
+    async buyNFT() {
+      this.isBuying = true;
+      const uri = this.currentCat.img;
+      try {
+        await Web3.buyNFT(this.$store.state.address, uri);
+        this.toast.success(
+          'You are successfully buy our NFT. Congratulations!',
+        );
+      } catch (error) {
+        console.log(error);
+        this.toast.error(error.message);
+      } finally {
+        this.isBuying = false;
+      }
+    },
+    async getURI() {
+      try {
+        const result = await Web3.getURI(this.tokenID);
+        this.toast.success(result);
+      } catch (error) {
+        this.toast.error(error.message);
+      }
+    },
     onSwiper(swiper) {
       this.swiper = swiper;
     },
@@ -102,9 +129,24 @@ export default {
           </option>
         </select>
       </form>
-      <button class="btn mt-5 btn-primary">
-        Get this for {{ tweenedPrice }}$
+      <button
+        class="btn mt-5 btn-primary"
+        :class="{ loading: isBuying }"
+        :disabled="isBuying"
+        @click="buyNFT"
+      >
+        <p v-if="isBuying">Buying...</p>
+        <p v-else>Get this for {{ tweenedPrice }}$</p>
       </button>
+      <div class="flex flex-col mt-5">
+        <input
+          type="text"
+          placeholder="Enter tokenID"
+          class="input input-bordered input-primary w-full max-w-xs"
+          v-model="tokenID"
+        />
+        <button class="btn mt-2 btn-primary" @click="getURI">Get URI</button>
+      </div>
     </div>
   </div>
 </template>
