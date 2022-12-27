@@ -68,7 +68,6 @@ export default {
           'You are successfully buy our NFT. Congratulations!',
         );
       } catch (error) {
-        console.log(error);
         this.toast.error(error.message);
       } finally {
         this.isBuying = false;

@@ -48,7 +48,9 @@ export default {
         this.toast.error(`We didn't found ${wallet} in your browser.`);
         return;
       }
+      const chain = await Web3.getChainId();
       this.$store.commit('setAddress', result);
+      this.$store.commit('setChainId', chain);
       this.closeModal();
     },
   },

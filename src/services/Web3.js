@@ -4,6 +4,7 @@ import Web3 from 'web3/dist/web3.min';
 // Fix for ReferenceError: global is not defined
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 import FlyNFT from '../abi/FlyNFT.json';
+import chains from '../utils/chains';
 
 export default class Web3Service {
   static infuraId = import.meta.env.VITE_INFURA_KEY;
@@ -11,6 +12,11 @@ export default class Web3Service {
   static nftContract = import.meta.env.VITE_NFT_CONTRACT;
 
   static abi = FlyNFT.abi;
+
+  // For testing purposes we use BSC Testnet
+  static defaultChain = 97;
+
+  static currentProvider = Web3.givenProvider;
 
   static async buyNFT(account) {
     let nftContract = this.getProvider().eth;
@@ -25,7 +31,6 @@ export default class Web3Service {
   }
 
   static async walletConnect() {
-    console.log(this.infuraId);
     //  Create WalletConnect Provider
     const provider = new WalletConnectProvider({
       infuraId: this.infuraId,
@@ -33,30 +38,91 @@ export default class Web3Service {
     //  Enable session (triggers QR Code modal)
     await provider.enable();
     //  Create Web3 instance
-    const web3 = this.getProvider(provider);
+    this.currentProvider = provider;
+    const web3 = this.getProvider();
     const accounts = await web3.eth.getAccounts();
     return accounts[0];
   }
 
-  static getProvider(_provider = Web3.givenProvider) {
+  static getProvider(_provider = this.currentProvider) {
     return new Web3(_provider);
   }
 
   static async getWallet() {
     if (typeof window.ethereum !== 'undefined') {
+      let provider = window.ethereum;
       let accounts = await ethereum.request({ method: 'eth_accounts' });
 
       if (!accounts[0]) {
-        const provider = new WalletConnectProvider({
+        provider = new WalletConnectProvider({
           infuraId: this.infuraId,
           qrcode: false,
         });
         await provider.enable();
         accounts = provider.accounts;
       }
+      this.currentProvider = provider;
       return accounts[0] ? accounts[0] : '';
     }
     return undefined;
+  }
+
+  static getWalletType() {
+    if (this.currentProvider.isMetaMask) {
+      return 'metamask';
+    } if (this.currentProvider.isCoinbaseWallet) {
+      return 'coinbase';
+    }
+    return 'walletconnect';
+  }
+
+  static async getChainId() {
+    return this.getProvider().eth.getChainId();
+  }
+
+  static async changeChain(chainId) {
+    const provider = window.ethereum;
+    const hexChain = `0x${chainId.toString(16)}`;
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [
+          {
+            chainId: hexChain,
+          },
+        ],
+      });
+      return true;
+    } catch (switchError) {
+      if (switchError.code === 4001) {
+        return true;
+      }
+      const chain = chains.find((el) => el.id === chainId);
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: hexChain,
+              chainName: chain.title,
+              rpcUrls: chain.rpcUrls,
+              nativeCurrency: chain.nativeCurrency,
+            },
+          ],
+        });
+        return true;
+      } catch (error) {
+        return error.message;
+      }
+    }
+  }
+
+  static onChainChange(callback) {
+    this.currentProvider.on('chainChanged', callback);
+  }
+
+  static onAccountChange(callback) {
+    this.currentProvider.on('accountsChanged', callback);
   }
 
   static async connectWallet(walletType = 'metamask') {
@@ -92,32 +158,8 @@ export default class Web3Service {
       const account = (
         await provider.request({ method: 'eth_requestAccounts' })
       )[0];
-      try {
-        await provider.request({
-          method: 'wallet_switchEthereumChain',
-          params: [
-            {
-              chainId: '0x61',
-            },
-          ],
-        });
-      } catch (switchError) {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0x61',
-              chainName: 'BSC Testnet',
-              rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545'],
-              nativeCurrency: {
-                name: 'BNB',
-                symbol: 'BNB',
-                decimals: 18,
-              },
-            },
-          ],
-        });
-      }
+      this.currentProvider = provider;
+      this.changeChain(this.defaultChain);
       return account;
     }
     return undefined;

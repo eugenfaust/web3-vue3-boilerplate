@@ -1,6 +1,7 @@
 <script>
 import { useToast } from 'vue-toastification';
 import ConnectButton from './ConnectButton.vue';
+import ChainButton from './ChainButton.vue';
 
 export default {
   name: 'NavBar',
@@ -47,7 +48,7 @@ export default {
       this.prevScrollPos = curScrollPos;
     },
   },
-  components: { ConnectButton },
+  components: { ConnectButton, ChainButton },
 };
 </script>
 
@@ -89,6 +90,7 @@ export default {
         >Web3App</a
       >
     </div>
+    <ChainButton />
     <ConnectButton />
   </div>
 </template>

@@ -37,7 +37,7 @@ export default {
 </script>
 <template>
   <ConnectModalVue />
-  <div v-if="!address" class="btn" @click="openConnectModal">
+  <div v-if="!address" class="btn btn-sm rounded-full" @click="openConnectModal">
     Connect wallet
   </div>
   <div v-else>

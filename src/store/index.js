@@ -7,6 +7,7 @@ const store = createStore({
       showDrawer: false,
       showConnectModal: false,
       address: undefined,
+      chainId: 1,
     };
   },
   mutations: {
@@ -15,6 +16,9 @@ const store = createStore({
     },
     setAddress(state, address) {
       state.address = address;
+    },
+    setChainId(state, chain) {
+      state.chainId = Number(chain);
     },
     setConnectModal(state, status) {
       state.showConnectModal = status;
