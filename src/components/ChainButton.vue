@@ -89,7 +89,24 @@ export default {
           />
         </svg>
 
-        <span class="mt-1 ml-2 mr-2 select-none">{{ chain.title }}</span>
+        <span class="mt-1 ml-2 mr-2 select-none max-sm:hidden">{{
+          chain.title
+        }}</span>
+        <span class="mt-1 ml-2 mr-2 select-none sm:hidden"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            class="w-6 h-6 stroke-current"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </span>
       </label>
       <ul
         class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
@@ -106,13 +123,13 @@ export default {
       </ul>
     </div>
     <Transition>
-    <div
-      v-if="showTooltip"
-      class="bg-base-200 rounded-xl p-2 absolute -bottom-5 text-xs "
-    >
-      Unable to switch network. Please try it on your wallet
-    </div>
-  </Transition>
+      <div
+        v-if="showTooltip"
+        class="bg-base-200 rounded-xl p-2 absolute -bottom-5 text-xs"
+      >
+        Unable to switch network. Please try it on your wallet
+      </div>
+    </Transition>
   </div>
 </template>
 <style>
