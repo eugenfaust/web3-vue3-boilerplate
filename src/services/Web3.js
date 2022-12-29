@@ -13,8 +13,8 @@ export default class Web3Service {
 
   static abi = FlyNFT.abi;
 
-  // For testing purposes we use BSC Testnet
-  static defaultChain = 97;
+  // For testing purposes we use Goerli
+  static defaultChain = 5;
 
   static currentProvider = Web3.givenProvider;
 
@@ -22,6 +22,12 @@ export default class Web3Service {
     let nftContract = this.getProvider().eth;
     nftContract = new nftContract.Contract(this.abi, this.nftContract);
     return nftContract.methods.mint().send({ from: account });
+  }
+
+  static async setBaseURI(account) {
+    let nftContract = this.getProvider().eth;
+    nftContract = new nftContract.Contract(this.abi, this.nftContract);
+    return nftContract.methods.setNewBaseUri(import.meta.env.VITE_IPFS_BASE_URI).send({ from: account });
   }
 
   static async getURI(tokenID) {
@@ -163,6 +169,12 @@ export default class Web3Service {
       return account;
     }
     return undefined;
+  }
+
+  static async balanceOf(account) {
+    let nftContract = this.getProvider().eth;
+    nftContract = new nftContract.Contract(this.abi, this.nftContract);
+    return nftContract.methods.balanceOf(account).call();
   }
 
   static async getBalance(account) {

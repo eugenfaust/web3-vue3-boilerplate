@@ -1,5 +1,27 @@
 <script>
 export default {
+  computed: {
+    theme() {
+      return this.$store.state.theme;
+    },
+  },
+  watch: {
+    theme(newVal) {
+      this.options = {
+        chart: {
+          background: '0',
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+        },
+        theme: {
+          mode: newVal,
+          pallete: 'pallete3',
+        },
+      };
+      console.log(newVal);
+    },
+  },
   data() {
     return {
       options: {
@@ -10,7 +32,7 @@ export default {
           categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
         },
         theme: {
-          mode: 'dark',
+          mode: 'light',
           pallete: 'pallete3',
         },
       },
@@ -22,6 +44,10 @@ export default {
       ],
       donutSeries: [44, 55, 41, 17, 15],
     };
+  },
+  mounted() {
+    this.options.theme.mode = this.theme;
+    console.log(this.options.theme.mode);
   },
 };
 </script>

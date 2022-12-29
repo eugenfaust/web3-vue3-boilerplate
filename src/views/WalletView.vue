@@ -2,6 +2,7 @@
 import DashboardVue from './wallet/DashboardView.vue';
 import InvestView from './wallet/InvestView.vue';
 import SettingsView from './wallet/SettingsView.vue';
+import NFTView from './wallet/NFTView.vue';
 
 export default {
   data() {
@@ -34,7 +35,9 @@ export default {
   mounted() {
     this.$store.commit('setDrawer', false);
   },
-  components: { DashboardVue, InvestView, SettingsView },
+  components: {
+    DashboardVue, InvestView, SettingsView, NFTView,
+  },
 };
 </script>
 <template>
@@ -48,6 +51,7 @@ export default {
     <div class="drawer-content flex flex-col items-center">
       <DashboardVue v-if="currentView === 'dashboard'" />
       <SettingsView v-else-if="currentView === 'settings'" />
+      <NFTView v-else-if="currentView === 'nft'" />
       <InvestView v-else />
     </div>
     <div class="drawer-side border-r-2 border-primary ">
@@ -69,11 +73,19 @@ export default {
         </li>
         <li>
           <a
+            :class="{ active: currentView === 'nft' }"
+            @click="goTo('nft')"
+            >Your NFTs</a
+          >
+        </li>
+        <li>
+          <a
             :class="{ active: currentView === 'settings' }"
             @click="goTo('settings')"
             >Settings</a
           >
         </li>
+
       </ul>
     </div>
   </div>

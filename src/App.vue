@@ -4,6 +4,9 @@ import FooterVue from './components/Footer.vue';
 import Web3 from './services/Web3';
 
 export default {
+  data() {
+    return {};
+  },
   methods: {
     subscribeOnChanges() {
       Web3.onChainChange(this.onChainChange);
@@ -24,6 +27,9 @@ export default {
     address() {
       return this.$store.state.address;
     },
+    theme() {
+      return this.$store.state.theme === 'light' ? 'cupcake' : 'business';
+    },
   },
   watch: {
     address() {
@@ -32,6 +38,7 @@ export default {
   },
   components: { NavbarVue, FooterVue },
   async mounted() {
+    this.$store.commit('setTheme', localStorage.getItem('theme') || 'light');
     const wallet = await Web3.getWallet();
     if (wallet) {
       this.$store.commit('setAddress', wallet);
@@ -44,9 +51,11 @@ export default {
 </script>
 
 <template>
-  <NavbarVue />
-  <div class="flex justify-center items-center pt-16">
-    <router-view />
+  <div :data-theme="theme">
+    <NavbarVue />
+    <div class="flex justify-center items-center pt-16">
+      <router-view />
+    </div>
+    <FooterVue />
   </div>
-  <FooterVue />
 </template>

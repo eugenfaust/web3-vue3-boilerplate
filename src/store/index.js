@@ -8,6 +8,7 @@ const store = createStore({
       showConnectModal: false,
       address: undefined,
       chainId: 1,
+      theme: 'light',
     };
   },
   mutations: {
@@ -22,6 +23,9 @@ const store = createStore({
     },
     setConnectModal(state, status) {
       state.showConnectModal = status;
+    },
+    setTheme(state, theme) {
+      state.theme = theme;
     },
   },
 });

@@ -73,14 +73,14 @@ export default {
       <label
         v-click-out-side="closeMenu"
         @click="toggleMenu"
-        class="mr-5 flex bg-neutral rounded-full transform transition duration-200 hover:scale-110 cursor-pointer"
+        class="mr-5 flex bg-base-300 rounded-full transform transition duration-200 hover:scale-110 cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
-          class="w-8 h-8 border-2 border-secondary p-1 rounded-full fill-secondary"
+          class="w-8 h-8 border-2 border-current p-1 rounded-full fill-current"
         >
           <path
             stroke-linecap="round"

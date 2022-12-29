@@ -7,6 +7,9 @@ module.exports = {
   },
   daisyui: {
     themes: [
+      'business',
+      'cupcake',
+      'light',
       'dark',
       {
         halloween: {

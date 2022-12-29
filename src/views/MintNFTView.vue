@@ -63,7 +63,18 @@ export default {
       this.isBuying = true;
       const uri = this.currentCat.img;
       try {
-        await Web3.buyNFT(this.$store.state.address, uri);
+        const response = await Web3.buyNFT(this.$store.state.address, uri);
+        if (!response.status) {
+          this.toast.errro(
+            'Got error! Try again',
+          );
+          this.isBuying = false;
+          return;
+        }
+        console.log(response);
+        const nfts = localStorage.getItem('nfts') || [];
+        nfts.push({ tokenId: response.events.Transfer.returnValues.tokenId });
+        localStorage.setItem('nfts', JSON.stringify(nfts));
         this.toast.success(
           'You are successfully buy our NFT. Congratulations!',
         );
@@ -76,7 +87,10 @@ export default {
     async getURI() {
       try {
         const result = await Web3.getURI(this.tokenID);
-        this.toast.success(result);
+        const ipfsUrl = `https://ipfs.io/ipfs/${result.substring(7)}`;
+        const response = await (await fetch(ipfsUrl)).json();
+        const imageUrl = `https://ipfs.io/ipfs/${response.image.substring(7)}`;
+        this.currentCat.img = imageUrl;
       } catch (error) {
         this.toast.error(error.message);
       }
